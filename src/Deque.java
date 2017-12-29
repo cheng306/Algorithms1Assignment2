@@ -126,12 +126,14 @@ public class Deque <Item> implements Iterable<Item>{
 		Node current  = first;
 		@Override
 		public boolean hasNext() {
-			return (current.next!=null);
+			return (current!=null);
 		}
 
 		@Override
 		public Item next() {	
-			return current.next.item;
+			Item item = current.item;
+			current = current.next;
+			return item;
 		}
 		
 	}
