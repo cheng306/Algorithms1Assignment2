@@ -4,20 +4,18 @@ import java.util.NoSuchElementException;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
-	int n;
-	Item[] rq;
+	private int n;
+	private Item[] rq;
 	
-	
+
 	public RandomizedQueue() {
-		n=0;
-		
-		
+		n = 0;
 		rq = (Item[]) new Object[2];
 		// construct an empty randomized queue
 	}
 	public boolean isEmpty() {
 		
-		return n==0;
+		return n == 0;
 		// is the randomized queue empty?
 	}
 	public int size()   {
@@ -31,12 +29,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 		
 		if (n==rq.length) {
 			Item[] temp = (Item[]) new Object[rq.length*2];
-			for (int i =0; i<rq.length;i++) {
-				temp[i]=rq[i];
+			for (int i = 0; i < rq.length;i++) {
+				temp[i] = rq[i];
 			}
 			rq = temp;
 		}
-		rq[n++]=item;
+		rq[n++] = item;
 
 	}
 	public Item dequeue() {
@@ -44,14 +42,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 			 throw new NoSuchElementException("Queue underflow");
 		 }
 		int random = StdRandom.uniform(n);
+		//System.out.println(random);
 		Item item = rq[random];
-		rq[random]=rq[n];
-		rq[n--]= null;
+		//System.out.println(n-1);
+		rq[random] = rq[n-1];
+		rq[n-1] = null;
+		n--;
 		
-		if (n > 0 && n == rq.length/4) {
+		if (n > 0 && (n-1) == rq.length/4) {
 			Item[] temp = (Item[]) new Object[rq.length/2];
-			for (int i =0; i<rq.length;i++) {
-				temp[i]=rq[i];
+			for (int i = 0; i < n;i++) {
+				temp[i] = rq[i];
 			}
 			rq = temp;
 		}
@@ -69,43 +70,39 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 	}
 	public Iterator<Item> iterator(){
 		return new Iterator<Item>() {
-			int i = 0 ;
-		
-			@Override
+			private int i = 0 ;
 			public boolean hasNext() {
 				// TODO Auto-generated method stub
-				return i<n;
+				return (i < n);
 			}
 
-			@Override
 			public Item next() {
-				// TODO Auto-generated method stub
+				if (i >= n) {
+					throw new NoSuchElementException();
+				}
 				int random = StdRandom.uniform(n-i);
 				Item temp = rq[random];
-				rq[random]=rq[n-1-i];
+				rq[random] = rq[n-1-i];
 				rq[n-1-i] = temp;
 				i++;
 				return temp;
 			}
-			
 		};
 		// return an independent iterator over items in random order
 	}
+	
+	/*
 	public static void main(String[] args) {  
 		RandomizedQueue<Integer> rq = new RandomizedQueue<Integer>();
 		rq.enqueue(1);
-		rq.enqueue(12);
-		rq.enqueue(13);
-		rq.enqueue(14);
-		
-		rq.enqueue(15);
-		
+		rq.enqueue(2);
+		rq.enqueue(3);
+		rq.enqueue(4);
+		rq.dequeue();
+		rq.dequeue();
+		rq.dequeue();
 		rq.dequeue();
 		
-		
-		Iterator<Integer> it = rq.iterator();
-		while (it.hasNext()) {
-			System.out.println(it.next());
-		}
 	}
+	*/
 }
